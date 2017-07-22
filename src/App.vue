@@ -2,7 +2,7 @@
   <div id="app" class="page-wrapper">
     <ul v-clickoutside="close">
       <li v-for="(url, index) in fingerDatas">
-        <Finger :imgSrc="url" :index="index" @deleteElemet="parentDelete"></Finger>
+        <Finger :imgSrc="url.imgUrl" :index="index" :isActive="url.isActive" @deleteElemet="parentDelete" @tapSelect="parentTapSelect" :clientTop="clientTop" :clientLeft="clientLeft"></Finger>
       </li>
     </ul>
     <div style="margin: 0 auto" @click="pop">
@@ -10,9 +10,9 @@
     </div>
     <Pop v-model="popupVisible" position="bottom"  class="mint-popup-4"  @input="currentValue" :closeOnClickModal="true">
       <div class="control">
-        <p @click="cancelImg">x</p>
+        <div @click="cancelImg" class="iconfont icon-guanbi"></div>
         <p>选择贴纸</p>
-        <p @click="addImg">√</p>
+        <div @click="addImg" class="iconfont icon-duihao" style="color: #34cf66"></div>
       </div>
       <swipe :auto="0"  @swipeFinish="swipedOrClose">
         <swipe-item  v-for="(item, index) in imgUrls">
@@ -39,30 +39,38 @@
         selectImgUrl: '',
         popupVisible: false,
         imgUrls: [
-          [ {imgUrl: 'http://res.af.raiyee.com/playcontrol/images/stickerBag/1.png', isSelect: false},
-            {imgUrl: 'http://res.af.raiyee.com/playcontrol/images/stickerBag/2.png', isSelect: false},
-            {imgUrl: 'http://res.af.raiyee.com/playcontrol/images/stickerBag/3.png', isSelect: false},
-            {imgUrl: 'http://res.af.raiyee.com/playcontrol/images/stickerBag/4.png', isSelect: false},
-            {imgUrl: 'http://res.af.raiyee.com/playcontrol/images/stickerBag/5.png', isSelect: false},
-            {imgUrl: 'http://res.af.raiyee.com/playcontrol/images/stickerBag/6.png', isSelect: false},
-            {imgUrl: 'http://res.af.raiyee.com/playcontrol/images/stickerBag/8.png', isSelect: false},
-            {imgUrl: 'http://res.af.raiyee.com/playcontrol/images/stickerBag/9.png', isSelect: false}
+          [ {imgUrl: 'http://res.af.raiyee.com/playcontrol/images/stickerBag/1.png', select: false},
+            {imgUrl: 'http://res.af.raiyee.com/playcontrol/images/stickerBag/2.png', select: false},
+            {imgUrl: 'http://res.af.raiyee.com/playcontrol/images/stickerBag/3.png', select: false},
+            {imgUrl: 'http://res.af.raiyee.com/playcontrol/images/stickerBag/4.png', select: false},
+            {imgUrl: 'http://res.af.raiyee.com/playcontrol/images/stickerBag/5.png', select: false},
+            {imgUrl: 'http://res.af.raiyee.com/playcontrol/images/stickerBag/6.png', select: false},
+            {imgUrl: 'http://res.af.raiyee.com/playcontrol/images/stickerBag/8.png', select: false},
+            {imgUrl: 'http://res.af.raiyee.com/playcontrol/images/stickerBag/9.png', select: false}
           ],
-          [ {imgUrl: 'http://res.af.raiyee.com/playcontrol/images/stickerBag/7.png', isSelect: false}
+          [ {imgUrl: 'http://res.af.raiyee.com/playcontrol/images/stickerBag/7.png', select: false}
           ]
         ],
+        fingerData: { imgUrl: "", isActive: false},
         fingerDatas: [],
+        currentSelectFinger: 0,
         isShown: true,
-        isSwiped: false
+        isSwiped: false,
+        clientTop: 0,
+        clientLeft: 0
       };
+    },
+    mounted: function () {
+      this.clientLeft = document.body.clientWidth / 2 - 30;
+      this.clientTop =  document.body.clientHeight / 2 - 30;
+      console.log('clientTop ' + this.clientTop);
     },
     methods: {
       pop: function () {
         this.popupVisible = !this.popupVisible;
       },
       close: function () {
-        console.log('closeOutSide');
-//        alert('clickOutSide');
+
       },
       currentValue: function (val) {
         this.swipedOrClose();
@@ -71,29 +79,38 @@
         this.selectImgUrl = url;
       },
       addImg: function () {
-        this.fingerDatas.push(this.selectImgUrl);
+        if (this.selectImgUrl.length > 0) {
+          this.reductionFingerData();
+          let data = { imgUrl: this.selectImgUrl, isActive: true};
+          this.fingerDatas.push(data);
+        }
         this.popupVisible = false;
       },
       cancelImg: function () {
         this.popupVisible = false;
       },
       parentDelete: function (isShown) {
-        this.isShown = false;
+        this.fingerDatas.splice(this.currentSelectFinger, 1);
+        console.log(this.fingerDatas);
       },
       swipedOrClose: function () {
         this.isSwiped = !this.isSwiped;
       },
       tapActive: function (index) {
         alert(index);
-      }
-    },
-    watch: {
-      popupVisible: function () {
-        this.selectImgUrl = '';
-        this.swipedOrClose();
       },
-      imgUrls: function () {
-
+      clickImgArea: function () {
+        this.reductionFingerData();
+      },
+      reductionFingerData: function () {
+        this.fingerDatas.forEach(function (value) {
+          value.isActive = false;
+        });
+      },
+      parentTapSelect: function (index) {
+        this.reductionFingerData();
+        this.currentSelectFinger = index;
+        this.fingerDatas[index].isActive = true;
       }
     },
     components: {
@@ -107,6 +124,8 @@
 </script>
 
 <style>
+  @import "assets/common/css/reset.css";
+  @import "assets/common/icon/iconfont.css";
   div.finger {
     position: absolute;
   }
