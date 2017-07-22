@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="page-wrapper">
+  <div id="app" class="page-wrapper" @click.self="clickOutArea">
     <ul v-clickoutside="close">
       <li v-for="(url, index) in fingerDatas">
         <Finger :imgSrc="url.imgUrl" :index="index" :isActive="url.isActive" @deleteElemet="parentDelete" @tapSelect="parentTapSelect" :clientTop="clientTop" :clientLeft="clientLeft"></Finger>
@@ -61,9 +61,8 @@
       };
     },
     mounted: function () {
-      this.clientLeft = document.body.clientWidth / 2 - 30;
-      this.clientTop =  document.body.clientHeight / 2 - 30;
-      console.log('clientTop ' + this.clientTop);
+      this.clientLeft = window.innerWidth / 2 - 30;
+      this.clientTop =  window.innerHeight / 3 - 30;
     },
     methods: {
       pop: function () {
@@ -91,7 +90,6 @@
       },
       parentDelete: function (isShown) {
         this.fingerDatas.splice(this.currentSelectFinger, 1);
-        console.log(this.fingerDatas);
       },
       swipedOrClose: function () {
         this.isSwiped = !this.isSwiped;
@@ -99,7 +97,8 @@
       tapActive: function (index) {
         alert(index);
       },
-      clickImgArea: function () {
+      clickOutArea: function () {
+          console.log('clickOutArea');
         this.reductionFingerData();
       },
       reductionFingerData: function () {
