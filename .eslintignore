@@ -1,2 +1,4 @@
 build/*.js
 config/*.js
+src/components/photoFinger/*.js
+src/components/photoFinger/popup/*.js
