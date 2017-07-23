@@ -5,7 +5,7 @@
 
 ## 效果显示
 
-![image](https://github.com/XiaMengjian/vue-sticker/tree/master/screenshot/vuesticker.gif)
+![image](https://github.com/XiaMengjian/vue-sticker/blob/master/screenshot/vuesticker.gif)
 
 ## 技术栈
 > vue-lazyload
