@@ -98,7 +98,6 @@
         alert(index);
       },
       clickOutArea: function () {
-          console.log('clickOutArea');
         this.reductionFingerData();
       },
       reductionFingerData: function () {
@@ -138,9 +137,6 @@
   h1 {
     font-size: 20px;
     color: #26a2ff;
-  }
-  p {
-    margin-bottom: 10px;
   }
 
   .mint-popup-4 {

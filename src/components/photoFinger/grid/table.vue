@@ -25,10 +25,10 @@
       };
     },
     created: function () {
-      this.minxData();
+      this.mixinData();
     },
     mounted: function () {
-      console.log('----------imgSrcs mounted----------');
+
     },
     methods: {
       chooseImg: function (e, index, url) {
@@ -48,7 +48,7 @@
           });
         });
       },
-      minxData: function () {
+      mixinData: function () {
         this.ulData.length = 0;
         let imgs = new Array(12).fill(this.defaultImg);
         imgs = this.imgSrcs.concat(imgs).slice(0, 12);
@@ -59,11 +59,11 @@
     },
     watch: {
       isSwipeFinish: function () {
+        console.log('isSwipeFinish');
         this.reductionData();
       },
       imgSrcs: function (val, oldVal) {
-        console.log('----------imgSrcs watch----------');
-        this.minxData();
+        this.mixinData();
       }
     },
     components: {
